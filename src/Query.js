@@ -1,26 +1,38 @@
-const githubQuery = {
-    query: `
-    {
-      viewer {
-        name
-      }
-      search(query: "user:orama254 sort:updated-desc", type: REPOSITORY, first: 20) {
-        nodes {
-          ... on Repository {
+const githubQuery =(pageCount, queryString, paginationKeyword, paginationString) => {
+  return {
+        query: `
+        {
+          viewer {
             name
-            description
-            id
-            url
-            viewerSubscription
-            licenseInfo {
-              spdxId
+          }
+          search(query: "${queryString} user:orama254 sort:updated-desc", type: REPOSITORY, ${paginationKeyword}: ${pageCount}, ${paginationString}) {
+            repositoryCount
+            edges {
+              cursor
+              node {
+                ... on Repository {
+                  name
+                  description
+                  id
+                  url
+                  viewerSubscription
+                  licenseInfo {
+                    spdxId
+                  }
+                }
+              }
+            }
+            pageInfo {
+              startCursor
+              endCursor
+              hasNextPage
+              hasPreviousPage
             }
           }
         }
-      }
-    }
-    `
-    ,
+        `
+        ,
+      };
   };
 
   export default githubQuery
